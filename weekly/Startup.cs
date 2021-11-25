@@ -36,6 +36,7 @@ namespace weekly
             services.AddSingleton<IWeeklyDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<WeeklyDatabaseSettings>>().Value);
             services.AddSingleton<UserService>();
+            services.AddSingleton<GubiService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
