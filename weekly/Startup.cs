@@ -6,11 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using weekly.Models;
+using weekly.Services;
 
 namespace weekly
 {
@@ -26,7 +29,13 @@ namespace weekly
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // requires using Microsoft.Extensions.Options
+            services.Configure<WeeklyDatabaseSettings>(
+                Configuration.GetSection(nameof(WeeklyDatabaseSettings)));
 
+            services.AddSingleton<IWeeklyDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<WeeklyDatabaseSettings>>().Value);
+            services.AddSingleton<UserService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

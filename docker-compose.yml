@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: volkan
+      MONGO_INITDB_ROOT_PASSWORD: ayla2017
+    ports:
+      - 27018:27017
+ 
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: volkan
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ayla2017
+      ME_CONFIG_MONGODB_URL: mongodb://volkan:ayla2017@mongo:27017/
+    depends_on:
+        - mongo
+    restart: always
+      
+  #weeklyapi:
+  #  build: .
+  #  ports:
+  #      - 5000:80
+  #  depends_on:
+  #      - mongo
