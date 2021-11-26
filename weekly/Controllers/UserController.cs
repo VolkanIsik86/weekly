@@ -1,18 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using weekly.Models;
 using weekly.Services;
 
 namespace weekly.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
-        public UserController(UserService userService)
+        private readonly IJwtAuth _jwtAuth;
+        public UserController(UserService userService, IJwtAuth jwtAuth)
         {
             _userService = userService;
+            _jwtAuth = jwtAuth;
         }
         [HttpGet]
         public ActionResult<List<User>> Get() =>
@@ -29,12 +33,17 @@ namespace weekly.Controllers
 
             return user;
         }
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult<User> Create(User user)
         {
             _userService.Create(user);
-
-            return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
+            var token = _jwtAuth.Authentication(user.Email, user.Password);
+            if(token == null)
+            {
+                return Unauthorized();
+            }
+            return CreatedAtRoute("GetUser", token);
         }
 
         [HttpPut("{id:length(24)}")]
@@ -65,6 +74,21 @@ namespace weekly.Controllers
             _userService.Remove(user.Id);
 
             return NoContent();
+        }
+
+        [AllowAnonymous]   
+        [HttpPost("authentication")]
+        public IActionResult Authentication([FromBody] UserCredential userCredential)
+        {
+            User user = _userService.Verify(userCredential.UserName,userCredential.Password);
+            if(user == null)
+            {
+                return Unauthorized("Bad credentials: " + userCredential.UserName + ".");
+            }
+            var token = _jwtAuth.Authentication(userCredential.UserName, userCredential.Password);
+            if (token == null)
+                return Unauthorized();
+            return Ok(token);
         }
     }
 }
