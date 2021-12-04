@@ -8,6 +8,9 @@ namespace weekly.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public int timestamp { get; set; }
+
+        [BsonElement("Name")]
+        public string Name { get; set; }
+        public long Timestamp { get; set; }
     }
 }
