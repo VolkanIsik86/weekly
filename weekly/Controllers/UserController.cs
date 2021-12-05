@@ -43,7 +43,7 @@ namespace weekly.Controllers
             {
                 return Unauthorized();
             }
-            return CreatedAtRoute("GetUser", token);
+            return Ok(token);
         }
 
         [HttpPut("{id:length(24)}")]
