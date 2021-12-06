@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +41,11 @@ namespace weekly
                 sp.GetRequiredService<IOptions<WeeklyDatabaseSettings>>().Value);
             services.AddSingleton<UserService>();
             services.AddSingleton<GubiService>();
+
+            
             services.AddControllers();
+            services.AddCors(options => options.AddDefaultPolicy(
+                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
             var key = "This is my first Test Key";
             services.AddAuthentication(x =>
@@ -78,9 +83,9 @@ namespace weekly
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "weekly v1"));
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 
