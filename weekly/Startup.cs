@@ -40,6 +40,7 @@ namespace weekly
                 sp.GetRequiredService<IOptions<WeeklyDatabaseSettings>>().Value);
             services.AddSingleton<UserService>();
             services.AddSingleton<GubiService>();
+            services.AddCors();
             services.AddControllers();
 
             var key = "This is my first Test Key";
@@ -81,6 +82,10 @@ namespace weekly
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(builder => builder
+              .AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 
             app.UseAuthentication();
 
