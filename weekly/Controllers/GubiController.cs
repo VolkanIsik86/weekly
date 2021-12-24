@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -58,28 +58,25 @@ namespace weekly.Controllers
         }
 
         [HttpPut("{name:length(4)}")]
-        public IActionResult Update(string name)
+        public ActionResult<Gubi> Update(string name)
         {
-            List<Gubi> gubi = _gubiService.Get();
+            Gubi gubi = _gubiService.Get().FirstOrDefault();
 
             if (gubi == null)
             {
                 return NotFound();
-            }
-
-            foreach (Gubi item in gubi)
-            {
-                if (item.Name.Contains(name))
+            }          
+                if (gubi.Name.Contains(name))
                 {
                     Gubi gubiIn = new Gubi();
-                    gubiIn.Name = item.Name;
-                    gubiIn.Id = item.Id;
+                    gubiIn.Name = gubi.Name;
+                    gubiIn.Id = gubi.Id;
                     long unixTimestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
                     gubiIn.Timestamp = unixTimestamp + (60 * 60 * 24 * 3);
                     _gubiService.Update(gubiIn.Id, gubiIn);
+                return gubiIn;
                 }
-            }
-
+            
             return NoContent();
         }
 
