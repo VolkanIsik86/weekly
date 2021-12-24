@@ -42,10 +42,11 @@ namespace weekly
             services.AddSingleton<UserService>();
             services.AddSingleton<GubiService>();
 
+            services.AddCors(options => options.AddDefaultPolicy(
+                builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             
             services.AddControllers();
-            services.AddCors(options => options.AddDefaultPolicy(
-                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
 
             var key = "This is my first Test Key";
             services.AddAuthentication(x =>
