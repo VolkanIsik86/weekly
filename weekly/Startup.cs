@@ -41,6 +41,7 @@ namespace weekly
                 sp.GetRequiredService<IOptions<WeeklyDatabaseSettings>>().Value);
             services.AddSingleton<UserService>();
             services.AddSingleton<GubiService>();
+            services.AddSingleton<ToDoService>();
 
             services.AddCors(options => options.AddDefaultPolicy(
                 builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
