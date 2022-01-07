@@ -10,10 +10,12 @@ namespace weekly.Controllers
     public class ToDoController : ControllerBase
     {
         private readonly ToDoService _toDos;
+        private readonly DateService _dateService;
 
-        public ToDoController(ToDoService toDoService)
+        public ToDoController(ToDoService toDoService,DateService dateService)
         {
             _toDos = toDoService;
+            _dateService = dateService;
         }
 
         [HttpGet]
@@ -35,8 +37,6 @@ namespace weekly.Controllers
         [HttpPost]
         public ActionResult<ToDo> Create(ToDo todo)
         {
-            DateService dateService = new DateService();
-            dateService.GetCurrentWeek();
             _toDos.Create(todo);
             return Ok();
         }
@@ -64,7 +64,9 @@ namespace weekly.Controllers
             _toDos.Remove(id);
             return NoContent();
         }
-        
-        
+
+        [HttpGet("weekly")]
+        public ActionResult<Week> GetWeekly() =>
+            _dateService.ArrangeWeekly();
     }
 }

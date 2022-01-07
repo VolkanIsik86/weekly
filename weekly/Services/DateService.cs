@@ -7,8 +7,28 @@ namespace weekly.Services
 {
     public class DateService
     {
-        public DateService()
+        private readonly ToDoService _toDos;
+        public DateService(ToDoService toDoService)
         {
+            _toDos = toDoService;
+        }
+
+        public Week ArrangeWeekly()
+        {
+            Week weekly = this.GetCurrentWeek();
+            List<ToDo> toDos = _toDos.Get();
+
+            foreach (ToDo todo in toDos)
+            {
+                foreach (Day day in weekly.Days)
+                {
+                    if (todo.Date.Equals(day.Date))
+                    {
+                        day.ToDos.Add(todo);
+                    }
+                }
+            }
+            return weekly;
         }
 
         public Week GetCurrentWeek()
@@ -57,6 +77,7 @@ namespace weekly.Services
             DateTime thisMonday = thisDate.AddDays(firstDayOfWeekOffset);
 
             Day thisDay = new Day();
+            thisDay.ToDos = new List<ToDo>();
             thisDay.Date = thisMonday.ToString("d", myCI);
             thisDay.Name = myCal.GetDayOfWeek(thisMonday).ToString();
             week.Days.Add(thisDay);
@@ -64,6 +85,7 @@ namespace weekly.Services
             for (int i = 1; i < 7; i++)
             {
                 thisDay = new Day();
+                thisDay.ToDos = new List<ToDo>();
                 thisDay.Date = thisMonday.AddDays(i).ToString("d", myCI);
                 thisDay.Name = myCal.GetDayOfWeek(thisMonday.AddDays(i)).ToString();
                 week.Days.Add(thisDay);

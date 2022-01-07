@@ -42,6 +42,7 @@ namespace weekly
             services.AddSingleton<UserService>();
             services.AddSingleton<GubiService>();
             services.AddSingleton<ToDoService>();
+            services.AddSingleton<DateService>();
 
             services.AddCors(options => options.AddDefaultPolicy(
                 builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
