@@ -94,5 +94,30 @@ namespace weekly.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("smiley")]
+        public ActionResult<Gubi> CreateSmiley()
+        {
+            return  _gubiService.CreateSmiley();
+        }
+        
+        [HttpPut("smiley")]
+        public ActionResult<Gubi> AddSmiley()
+        {
+            return _gubiService.AddSmiley();
+        }
+        
+        [HttpDelete("smiley")]
+        public ActionResult<Gubi> ClearSmiley()
+        {
+            return _gubiService.ClearSmiley();
+        }
+
+        [HttpGet("smiley")]
+        public ActionResult<Gubi> GetSmiley()
+        {
+            return _gubiService.GetSmiley();
+        }
+
     }
 }
