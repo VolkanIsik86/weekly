@@ -35,5 +35,43 @@ namespace weekly.Services
             _gubis.DeleteOne(gubi => gubi.Id == gubiIn.Id);
         public void Remove(string id) =>
             _gubis.DeleteOne(gubi => gubi.Id == id);
+
+        public Gubi AddSmiley()
+        {
+            Gubi temp = _gubis.Find(gubi => gubi.Name == "smiley").FirstOrDefault();
+
+            if (temp.Timestamp < 5)
+            {
+                temp.Timestamp++;
+            }
+
+            _gubis.ReplaceOne(gubi => gubi.Name == temp.Name, temp);
+            return temp;
+        }
+        public Gubi ClearSmiley()
+        {
+            Gubi temp = _gubis.Find(gubi => gubi.Name == "smiley").FirstOrDefault();
+
+            temp.Timestamp = 0;
+
+            _gubis.ReplaceOne(gubi => gubi.Name == temp.Name, temp);
+            return temp;
+        }
+        public Gubi CreateSmiley()
+        {
+            Gubi gubi = new Gubi();
+            gubi.Name = "smiley";
+            gubi.Timestamp = 0;
+            _gubis.InsertOne(gubi);
+            return gubi;
+        }
+
+        public Gubi GetSmiley()
+        {
+            Gubi gubi = _gubis.Find<Gubi>(gubi => gubi.Name == "smiley").FirstOrDefault();
+            return gubi;
+        }
+        
+        
     }
 }
