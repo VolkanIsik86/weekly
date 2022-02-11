@@ -41,7 +41,6 @@ namespace weekly.Controllers
             {
                 return NotFound();
             }
-
             return gubi;
         }
 
